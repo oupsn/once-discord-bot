@@ -36,7 +36,7 @@ client.on("interactionCreate", async (interaction) => {
       await interaction.reply({
         content: `${
           name?.value
-        } created! This channel will dispear at ${stopDate.format(
+        } created! This channel will disappear at ${stopDate.format(
           "MMMM D, YYYY hh:mm:ss A"
         )}`,
         ephemeral: true,
