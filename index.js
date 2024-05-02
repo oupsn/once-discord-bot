@@ -2,9 +2,12 @@ import {
   ChannelType,
   Client,
   GatewayIntentBits,
-  GuildChannelManager,
 } from "discord.js";
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
+import timezone from "dayjs/plugin/timezone.js";
+dayjs.extend(utc)
+dayjs.extend(timezone)
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -34,45 +37,16 @@ client.on("interactionCreate", async (interaction) => {
         parent: category.value,
       });
       await interaction.reply({
-        content: `${name?.value} created! This channel will disappear at ${dayjs(stopDate).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss")}`,
+        content: `${name?.value} created! This channel will disappear at **${dayjs(stopDate).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss")}**`,
         ephemeral: true,
       });
     } catch (error) {
       console.log("Error: " + error);
-      await interaction.editReply({
+      await interaction.reply({
         content: "Error: " + error,
         ephemeral: true,
       });
     }
-
-    // let timeLeft = duration * 60;
-    // const interval = setInterval(async () => {
-    //   try {
-    //     if (timeLeft === 0) {
-    //       await interaction.editReply({
-    //         content: `${name?.value} has been deleted!`,
-    //         ephemeral: true,
-    //       });
-    //       await interaction.guild.channels.delete(
-    //         createdChannel.id,
-    //         "Event ended"
-    //       );
-    //       clearInterval(interval);
-    //     } else {
-    //       await interaction.editReply({
-    //         content: `${name?.value} created! This channel will disappear in ${timeLeft} seconds`,
-    //         ephemeral: true,
-    //       });
-    //       timeLeft--;
-    //     }
-    //   } catch (error) {
-    //     console.log("Error: " + error);
-    //     await interaction.editReply({
-    //       content: "Error: " + error,
-    //       ephemeral: true,
-    //     });
-    //   }
-    // }, 1000);
 
     setTimeout(async () => {
       try {
