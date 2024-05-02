@@ -37,7 +37,7 @@ client.on("interactionCreate", async (interaction) => {
         parent: category.value,
       });
       await interaction.reply({
-        content: `${name?.value} created! This channel will disappear at **${dayjs(stopDate).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss")}**`,
+        content: `**${name?.value}** created! This channel will disappear at **${dayjs(stopDate).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss")}**`,
         ephemeral: true,
       });
     } catch (error) {
