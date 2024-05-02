@@ -44,7 +44,7 @@ client.on("interactionCreate", async (interaction) => {
       });
     }
 
-    let timeLeft = duration * 60 * 1000;
+    let timeLeft = duration * 60;
     const interval = setInterval(async () => {
       try {
         if (timeLeft === 0) {
