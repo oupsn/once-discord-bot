@@ -38,6 +38,7 @@ client.on("interactionCreate", async (interaction) => {
         ephemeral: true,
       });
     } catch (error) {
+      console.log("Error: " + error);
       await interaction.reply({
         content: "Error: " + error,
         ephemeral: true,
@@ -65,7 +66,8 @@ client.on("interactionCreate", async (interaction) => {
           timeLeft--;
         }
       } catch (error) {
-        await interaction.reply({
+        console.log("Error: " + error);
+        await interaction.editReply({
           content: "Error: " + error,
           ephemeral: true,
         });
