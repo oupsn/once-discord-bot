@@ -24,7 +24,7 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.commandName === "create") {
     const name = interaction.options.get("name");
     const duration = interaction.options.get("duration")?.value;
-    //const stopDate = dayjs().add(duration, "minute");
+    const stopDate = dayjs().add(duration, "minute");
     const category = interaction.options.get("category");
     let createdChannel;
     try {
@@ -34,63 +34,63 @@ client.on("interactionCreate", async (interaction) => {
         parent: category.value,
       });
       await interaction.reply({
-        content: `${name?.value} created! This channel will disappear in ${duration * 60} seconds`,
+        content: `${name?.value} created! This channel will disappear at ${stopDate.tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss")}`,
         ephemeral: true,
       });
     } catch (error) {
       console.log("Error: " + error);
-      await interaction.reply({
+      await interaction.editReply({
         content: "Error: " + error,
         ephemeral: true,
       });
     }
 
-    let timeLeft = duration * 60;
-    const interval = setInterval(async () => {
-      try {
-        if (timeLeft === 0) {
-          await interaction.editReply({
-            content: `${name?.value} has been deleted!`,
-            ephemeral: true,
-          });
-          await interaction.guild.channels.delete(
-            createdChannel.id,
-            "Event ended"
-          );
-          clearInterval(interval);
-        } else {
-          await interaction.editReply({
-            content: `${name?.value} created! This channel will disappear in ${timeLeft} seconds`,
-            ephemeral: true,
-          });
-          timeLeft--;
-        }
-      } catch (error) {
-        console.log("Error: " + error);
-        await interaction.editReply({
-          content: "Error: " + error,
-          ephemeral: true,
-        });
-      }
-    }, 1000);
-
-    // setTimeout(async () => {
+    // let timeLeft = duration * 60;
+    // const interval = setInterval(async () => {
     //   try {
-    //     await interaction.editReply({
-    //       content: `${name?.value} has been deleted!`,
-    //       ephemeral: true,
-    //     });
-    //     await interaction.guild.channels.delete(
-    //       createdChannel.id,
-    //       "Event ended"
-    //     );
+    //     if (timeLeft === 0) {
+    //       await interaction.editReply({
+    //         content: `${name?.value} has been deleted!`,
+    //         ephemeral: true,
+    //       });
+    //       await interaction.guild.channels.delete(
+    //         createdChannel.id,
+    //         "Event ended"
+    //       );
+    //       clearInterval(interval);
+    //     } else {
+    //       await interaction.editReply({
+    //         content: `${name?.value} created! This channel will disappear in ${timeLeft} seconds`,
+    //         ephemeral: true,
+    //       });
+    //       timeLeft--;
+    //     }
     //   } catch (error) {
-    //     await interaction.reply({
+    //     console.log("Error: " + error);
+    //     await interaction.editReply({
     //       content: "Error: " + error,
     //       ephemeral: true,
     //     });
     //   }
-    // }, duration * 60 * 1000);
+    // }, 1000);
+
+    setTimeout(async () => {
+      try {
+        await interaction.editReply({
+          content: `${name?.value} has been deleted!`,
+          ephemeral: true,
+        });
+        await interaction.guild.channels.delete(
+          createdChannel.id,
+          "Event ended"
+        );
+      } catch (error) {
+        await interaction.reply({
+          content: "Error: " + error,
+          ephemeral: true,
+        });
+      }
+    }, duration * 60 * 1000);
   }
 });
 
