@@ -34,7 +34,7 @@ client.on("interactionCreate", async (interaction) => {
         parent: category.value,
       });
       await interaction.reply({
-        content: `${name?.value} created! This channel will disappear in ${duration} seconds`,
+        content: `${name?.value} created! This channel will disappear in ${duration * 60} seconds`,
         ephemeral: true,
       });
     } catch (error) {
