@@ -1,13 +1,9 @@
-import {
-  ChannelType,
-  Client,
-  GatewayIntentBits,
-} from "discord.js";
+import { ChannelType, Client, GatewayIntentBits } from "discord.js";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
-dayjs.extend(utc)
-dayjs.extend(timezone)
+dayjs.extend(utc);
+dayjs.extend(timezone);
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -37,7 +33,11 @@ client.on("interactionCreate", async (interaction) => {
         parent: category.value,
       });
       await interaction.reply({
-        content: `**${name?.value}** created! This channel will disappear at **${dayjs(stopDate).tz("Asia/Bangkok").format("YYYY-MM-DD HH:mm:ss")}**`,
+        content: `**${
+          name?.value
+        }** created! This channel will disappear at **${dayjs(stopDate)
+          .tz("Asia/Bangkok")
+          .format("YYYY-MM-DD HH:mm:ss")}**`,
         ephemeral: true,
       });
     } catch (error) {
@@ -50,19 +50,12 @@ client.on("interactionCreate", async (interaction) => {
 
     setTimeout(async () => {
       try {
-        await interaction.editReply({
-          content: `${name?.value} has been deleted!`,
-          ephemeral: true,
-        });
         await interaction.guild.channels.delete(
           createdChannel.id,
           "Event ended"
         );
       } catch (error) {
-        await interaction.reply({
-          content: "Error: " + error,
-          ephemeral: true,
-        });
+        console.log("Error: " + error);
       }
     }, duration * 60 * 1000);
   }
