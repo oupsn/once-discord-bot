@@ -61,7 +61,7 @@ client.on("interactionCreate", async (interaction) => {
           );
         } else if (remainingTime == 10000) {
           interaction.channel.send(
-            `**${name.value}** will end in **10 seconds**`
+            `**${name.value}** will end in less than **10 seconds**`
           );
         } else if (remainingTime == 5000 && remainingTime > 0) {
           interaction.channel.send(
