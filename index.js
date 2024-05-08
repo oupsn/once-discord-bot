@@ -14,7 +14,8 @@ const client = new Client({
 });
 
 client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  //console.log(`Logged in as ${client.user.tag}!`);\
+  console.log("Once is running!!!");
 });
 
 client.on("interactionCreate", async (interaction) => {
@@ -23,8 +24,8 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.commandName === "create") {
     const name = interaction.options.get("name");
     const duration = interaction.options.get("duration")?.value;
-    const stopDate = dayjs().add(duration, "minute");
     const category = interaction.options.get("category");
+    const isCountdown = interaction.options.get("countdown")?.value;
     let createdChannel;
     try {
       createdChannel = await interaction.guild.channels.create({
@@ -32,39 +33,61 @@ client.on("interactionCreate", async (interaction) => {
         type: ChannelType.GuildVoice,
         parent: category.value,
       });
-      await interaction.reply({
+      interaction.reply({
         content: `**${
           name?.value
-        }** created! This channel will disappear at **${dayjs(stopDate)
+        }** created! This channel will disappear at **${dayjs(
+          dayjs().add(duration, "minute")
+        )
           .tz("Asia/Bangkok")
           .format("YYYY-MM-DD HH:mm:ss")}**`,
         ephemeral: true,
       });
     } catch (error) {
       console.log("Error: " + error);
-      await interaction.reply({
-        content: "Error: " + error,
-        ephemeral: true,
-      });
     }
 
-    setTimeout(async () => {
-      try {
-        await interaction.guild.channels.delete(
-          createdChannel.id,
-          "Event ended"
-        );
-      } catch (error) {
-        console.log("Error: " + error);
-      }
-    }, duration * 60 * 1000);
+    if (isCountdown) {
+      let remainingTime = duration * 60 * 1000;
+      const interval = setInterval(async () => {
+        remainingTime -= 1000;
+        if (remainingTime == 60000) {
+          interaction.channel.send(
+            `**${name.value}** will end in less than **1 minute**`
+          );
+        } else if (remainingTime == 30000) {
+          interaction.channel.send(
+            `**${name.value}** will end in less than **30 seconds**`
+          );
+        } else if (remainingTime == 10000) {
+          interaction.channel.send(
+            `**${name.value}** will end in **10 seconds**`
+          );
+        } else if (remainingTime == 5000 && remainingTime > 0) {
+          interaction.channel.send(
+            `**${name.value}** will end in less than **5 seconds**`
+          );
+        } else if (remainingTime == 0) {
+          interaction.channel.send(`**${name.value} has ended**`);
+          clearInterval(interval);
+          try {
+            await interaction.guild.channels.delete(
+              createdChannel.id,
+              "Event ended"
+            );
+          } catch (error) {
+            console.log("Error: " + error);
+          }
+        }
+      }, 1000);
+    }
   }
 });
 
-// client.on("messageCreate", async (message) => {
-//     if(message.content === "Hi") {
-//         message.reply("Hello!")
-//     }
-// });
+client.on("messageCreate", async (message) => {
+  if (message.content === "Hi") {
+    message.reply("Hello!");
+  }
+});
 
 client.login(process.env.TOKEN);

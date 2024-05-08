@@ -9,21 +9,37 @@ const commands = [
         name: "name",
         description: "The name of the channel",
         type: ApplicationCommandOptionType.String,
-        required: true
+        required: true,
       },
       {
         name: "duration",
         description: "The duration of the event in minutes",
         type: ApplicationCommandOptionType.Integer,
-        required: true
+        required: true,
       },
       {
         name: "category",
         description: "The category of the channel",
         type: ApplicationCommandOptionType.Channel,
-        required: true
-      }
-    ]
+        required: true,
+      },
+      {
+        name: "countdown",
+        description: "The countdown of the event before end.",
+        type: ApplicationCommandOptionType.Boolean,
+        choices: [
+          {
+            name: "yes",
+            value: true,
+          },
+          {
+            name: "no",
+            value: false,
+          },
+        ],
+        required: true,
+      },
+    ],
   },
 ];
 
